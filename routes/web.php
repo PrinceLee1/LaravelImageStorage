@@ -20,4 +20,5 @@ Route::get('/', function () {
 Route::view('file-upload', 'components.upload_form');
 Route::post('/file-upload', [GeneralController::class, 'store']);
 Route::get('/view-uploads', [GeneralController::class, 'viewUploads']);
-Route::get('/view-uploads/delete/{url}', [GeneralController::class, 'deleteImage']);
+Route::get('/delete/{id}', [GeneralController::class, 'deleteImage']);
+Route::get('/pixa-upload', [GeneralController::class, 'pixabay']);
