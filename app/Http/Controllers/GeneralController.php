@@ -20,6 +20,7 @@ class GeneralController extends Controller
                 'image.*' => ['mimes:jpeg,png', 'max:1014']
             ]);
             $selectImages = $request->file('image');
+            // dd($selectImages);
                 foreach($selectImages as $files){
                         $extension = $files->extension();
                        $file_name = $files->storeAs('/public/files', $validated['name'].".".$extension);
@@ -52,8 +53,31 @@ class GeneralController extends Controller
     {
     
         $selectImages = $imageUrl->input('img');
-        $data = Http::get("https://pixabay.com/api/?key=18581546-a8aa82035e877bc6424f56709&q='$selectImages'+flowers&image_type=photo")->json();
-// dd($data);
-        return view('components.pixa_upload', ['data'=> $data]);
+        // dd($selectImages);
+        $data = Http::get("https://pixabay.com/api/?key=18581546-a8aa82035e877bc6424f56709&q=$selectImages+sea&image_type=photo")->json();
+    
+      foreach($data['hits'] as $items){
+         $fetchedData[] = $items['previewURL'];
+         $id[] = $items['id'];
+      }
+        return view('components.pixa_upload',  ['fetchedData' => $fetchedData, 'id' => $id, 'selectImages' => $selectImages]);
     }
+    public function addPixabay(Request $request) 
+    {
+        $datas = $request->all();
+        $datasName = $datas['pixaName'];
+        $datasURL = $datas['pixaURL'];
+        File::create([
+            'name' => $datasName,
+                'url' => $datasURL,
+            ]);
+        dd('ok');
+        
+        // foreach($datas as $dt){
+        //     $newDt[] = $dt['pixaURL'];
+        //     dd($newDt);
+        // }
+    }
+     
+    
 }

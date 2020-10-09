@@ -22,3 +22,5 @@ Route::post('/file-upload', [GeneralController::class, 'store']);
 Route::get('/view-uploads', [GeneralController::class, 'viewUploads']);
 Route::get('/delete/{id}', [GeneralController::class, 'deleteImage']);
 Route::get('/pixa-upload', [GeneralController::class, 'pixabay']);
+Route::get('/pixabay',function(){return view('components.pixa_upload');});
+Route::post('/add', [GeneralController::class, 'addPixabay']);
