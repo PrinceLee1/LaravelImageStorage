@@ -1,3 +1,6 @@
 .col-md-12{
     margin-left: 100px;
 }
+.activeImage{
+    border: 2px solid blue !important;
+}
