@@ -1,6 +1,7 @@
 @extends('components.master')
 @include('components.nav')
 <html>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <body>
 <div class="container-fluid">
     <div class="row justify-content-center">
@@ -49,32 +50,37 @@
 </body>
 <script>
     var images = [];
-$("img").click(function(event) {
-    $("#tog").show();
-            var getInputValue = jQuery("#pixaURL").val();
+    
+    $("img").click(function(event) {
+        $("#tog").show();
+            var getInputValue = $(this).attr('src');
+            
+            var exists = images.includes(getInputValue)
+                
+            if (!exists) {
                 images.push(getInputValue);
-                // console.log(images);
- $(this).addClass("activeImage");
-//  event.preventDefault();
-
+            }
+                            
+        $(this).addClass("activeImage");
   });
+
   $("#tog").click(function(event){
-   event.preventDefault();
+      event.preventDefault();
 
       $.ajax({
-url : '/add',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url : '/add',
         type : 'POST',
-            data : images, 
-                success : function(response){
-    console.log(images);
-    if(response) {
-            $('.success').text(response.success);
-            $("#ajaxform")[0].reset();
-          }
-         }
-            });
-//  event.preventDefault();
-
+        data : {
+            img : images
+        }, 
+        success : function(response){
+            console.log(response)
+        }    
+      });
+      
   });
 </script>
 </html>
