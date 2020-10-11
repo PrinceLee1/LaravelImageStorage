@@ -49,24 +49,25 @@
 </div>
 </body>
 <script>
+    var name = '';
     var images = [];
     
     $("img").click(function(event) {
         $("#tog").show();
-            var getInputValue = $(this).attr('src');
+            name = $('input[name="pixaName"]').val();
+            var url = $(this).attr('src');
             
-            var exists = images.includes(getInputValue)
-                
+            var exists = images.includes(url)
             if (!exists) {
-                images.push(getInputValue);
+                images.push(url);
             }
-                            
+              
         $(this).addClass("activeImage");
   });
 
   $("#tog").click(function(event){
       event.preventDefault();
-
+        $('img').removeClass('activeImage');
       $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -74,7 +75,8 @@
         url : '/add',
         type : 'POST',
         data : {
-            img : images
+            pixaName : name,
+            pixaURL : images
         }, 
         success : function(response){
             console.log(response)

@@ -12,7 +12,7 @@ class GeneralController extends Controller
 {
     public function store(Request $request)
     {
-  
+        
         if ($request->hasFile('image')) {
             $validated = $request->validate([
                 'name' => 'string|max:40',
@@ -65,6 +65,16 @@ class GeneralController extends Controller
     }
     public function addPixabay(Request $request)
     {
-        return json_encode($request->all());
+        $pixaName = $request->pixaName;
+        $pixaURL = $request->pixaURL;
+
+        foreach ($pixaURL as $url) {
+            $save = File::create([
+                        'name' => $pixaName,
+                        'url' => $pixaURL
+                    ]);
+        }
+
+        return $save;
     }
 }
