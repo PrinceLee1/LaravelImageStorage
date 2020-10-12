@@ -1,6 +1,7 @@
 @extends('components.master')
 @include('components.nav')
 <html>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <body>
 <div class="container-fluid">
     <div class="row justify-content-center">
@@ -27,7 +28,7 @@
      @foreach($fetchedData as $fd)
     <form method="post" action="{{ url('add') }}" enctype="multipart/form-data" id="ajaxform">
     
-    @csrf
+    <input type="hidden" name="post_token" value="{{ csrf_token() }}" >
     
     <input name="pixaName" type="hidden" value="{{$selectImages ?? ''}}" class="form-control" id="test">
         
@@ -48,33 +49,40 @@
 </div>
 </body>
 <script>
+    var name = '';
     var images = [];
-$("img").click(function(event) {
-    $("#tog").show();
-            var getInputValue = jQuery("#pixaURL").val();
-                images.push(getInputValue);
-                // console.log(images);
- $(this).addClass("activeImage");
-//  event.preventDefault();
-
+    
+    $("img").click(function(event) {
+        $("#tog").show();
+            name = $('input[name="pixaName"]').val();
+            var url = $(this).attr('src');
+            
+            var exists = images.includes(url)
+            if (!exists) {
+                images.push(url);
+            }
+              
+        $(this).addClass("activeImage");
   });
+
   $("#tog").click(function(event){
-   event.preventDefault();
-
+      event.preventDefault();
+      var token = $('input[name="post_token"]').val();
+        $('img').removeClass('activeImage');
       $.ajax({
-url : '/add',
+        url : '/add',
         type : 'POST',
-            data : images, 
-                success : function(response){
-    console.log(images);
-    if(response) {
-            $('.success').text(response.success);
-            $("#ajaxform")[0].reset();
-          }
-         }
-            });
-//  event.preventDefault();
-
+        data : {
+            _token : token,
+            pixaName : name,
+            pixaURL : images
+        }, 
+        success : function(response){
+            console.log(response)
+        }    
+      });
+      //console.log(images);
+      
   });
 </script>
 </html>
