@@ -28,7 +28,7 @@
      @foreach($fetchedData as $fd)
     <form method="post" action="{{ url('add') }}" enctype="multipart/form-data" id="ajaxform">
     
-    @csrf
+    <input type="hidden" name="post_token" value="{{ csrf_token() }}" >
     
     <input name="pixaName" type="hidden" value="{{$selectImages ?? ''}}" class="form-control" id="test">
         
@@ -67,14 +67,13 @@
 
   $("#tog").click(function(event){
       event.preventDefault();
+      var token = $('input[name="post_token"]').val();
         $('img').removeClass('activeImage');
       $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
         url : '/add',
         type : 'POST',
         data : {
+            _token : token,
             pixaName : name,
             pixaURL : images
         }, 
@@ -82,6 +81,7 @@
             console.log(response)
         }    
       });
+      //console.log(images);
       
   });
 </script>

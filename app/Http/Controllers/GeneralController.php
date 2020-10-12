@@ -71,10 +71,14 @@ class GeneralController extends Controller
         foreach ($pixaURL as $url) {
             $save = File::create([
                         'name' => $pixaName,
-                        'url' => $pixaURL
+                        'url' => $url
                     ]);
         }
 
-        return $save;
+        if (!$save) {
+            return 'not saved';
+        }
+
+       return view('components.view-uploads');
     }
 }
